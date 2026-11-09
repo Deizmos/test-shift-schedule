@@ -5,18 +5,26 @@
 @source '../js/**/*.vue';
 
 @theme {
+    --breakpoint-wide: 68.75rem;
+
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
     --color-ink: #1c1d22;
-    --color-blue: #3d5afe;
-    --color-blue-soft: #e7ecff;
-    --color-canvas: #f4f5f7;
-    --color-line: #e4e6ee;
+    --color-blue: #627ce5;
+    --color-blue-soft: #e9edfb;
+    --color-canvas: #f2f3f7;
+    --color-field: #f2f3f7;
+    --color-row: #f8f9fb;
+    --color-line: #e6e7ee;
     --color-muted: #8b90a0;
-    --color-cover-empty: #ffd0d6;
-    --color-shift-morning: #e4ebff;
-    --color-shift-day: #e3f6ef;
-    --color-shift-evening: #eee6ff;
-    --color-shift-solid: #5b6ef5;
+    --color-cover-empty: #f8e6e6;
+    --color-cover-text: #cf4c46;
+    --color-shift-morning: #e7ebfb;
+    --color-shift-morning-edge: #bec9f3;
+    --color-shift-day: #f3eaff;
+    --color-shift-day-edge: #c4aefa;
+    --color-shift-evening: #e5f6f5;
+    --color-shift-evening-edge: #bfedeb;
+    --color-shift-solid: #627ce5;
 }

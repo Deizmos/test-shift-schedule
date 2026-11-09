@@ -82,6 +82,10 @@ export const useScheduleStore = defineStore('schedule', () => {
         return coveredDates.value.has(date);
     }
 
+    function coverageCount(date: string): number {
+        return shifts.value.reduce((count, shift) => count + (shift.date === date ? 1 : 0), 0);
+    }
+
     function isSelected(employeeId: number, date: string): boolean {
         return selectedKeys.value.includes(cellKey(employeeId, date));
     }
@@ -349,6 +353,7 @@ export const useScheduleStore = defineStore('schedule', () => {
         visibleEmployees,
         shiftOn,
         isDateCovered,
+        coverageCount,
         isSelected,
         beginSelecting,
         replaceSelection,

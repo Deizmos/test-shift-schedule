@@ -32,9 +32,9 @@ class ScheduleSeeder extends Seeder
         }
 
         $templates = [
-            ['name' => 'Утро', 'start_time' => '07:00', 'end_time' => '15:00', 'color' => '#E4EBFF', 'sort_order' => 1],
-            ['name' => 'День', 'start_time' => '10:00', 'end_time' => '18:00', 'color' => '#E3F6EF', 'sort_order' => 2],
-            ['name' => 'Вечер', 'start_time' => '15:00', 'end_time' => '23:00', 'color' => '#EEE6FF', 'sort_order' => 3],
+            ['name' => 'Утро', 'start_time' => '07:00', 'end_time' => '15:00', 'color' => '#BEC9F3', 'sort_order' => 1],
+            ['name' => 'День', 'start_time' => '10:00', 'end_time' => '18:00', 'color' => '#C4AEFA', 'sort_order' => 2],
+            ['name' => 'Вечер', 'start_time' => '15:00', 'end_time' => '23:00', 'color' => '#BFEDEB', 'sort_order' => 3],
         ];
 
         foreach ($templates as $template) {

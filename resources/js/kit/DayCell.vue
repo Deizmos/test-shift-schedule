@@ -32,16 +32,47 @@ withDefaults(
         :aria-label="label"
         :class="
             surface === 'grid'
-                ? [view === 'month' ? 'h-11 w-full px-0.5' : 'h-16 w-full', selected ? 'bg-[#eef1ff] text-blue ring-2 ring-blue/40 ring-inset' : 'bg-transparent hover:bg-zinc-50']
+                ? [view === 'month' ? 'h-10 w-full px-0.5 md:h-12 md:px-1' : 'h-16 w-full px-1 md:h-[76px] md:px-2']
                 : [
                       'h-[72px] w-[72px] rounded-xl',
-                      state === 'empty' ? 'border border-dashed border-zinc-300 bg-white' : '',
-                      state === 'selected' ? 'border border-blue/40 bg-[#eef1ff] text-blue' : '',
+                      state === 'empty' ? 'border border-dashed border-[#d5d8e2] bg-white' : '',
+                      state === 'selected' ? 'border border-solid border-blue bg-blue-soft text-blue' : '',
                       state === 'filled' ? 'border border-transparent bg-transparent' : '',
                   ]
         "
     >
-        <span v-if="state === 'selected' || (surface === 'grid' && selected && state === 'empty')" class="text-lg leading-none">+</span>
-        <ShiftChip v-else-if="state === 'filled'" :view="view" :compact="surface === 'grid' && view === 'month'" :time="time" :hours="hours" :tone="tone" />
+        <span
+            v-if="surface === 'grid' && state !== 'filled'"
+            class="flex w-full items-center justify-center rounded-xl border bg-white"
+            :class="[
+                view === 'month' ? 'h-7 md:h-8' : 'h-12 md:h-14',
+                selected ? 'border-solid border-blue bg-blue-soft text-blue' : 'border-dashed border-[#d5d8e2]',
+            ]"
+        >
+            <span
+                v-if="selected"
+                class="flex items-center justify-center rounded-full border border-blue"
+                :class="view === 'month' ? 'size-4' : 'size-6'"
+            >
+                <svg :class="view === 'month' ? 'size-2.5' : 'size-3.5'" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M7 2.5v9M2.5 7h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                </svg>
+            </span>
+        </span>
+        <span v-else-if="state === 'selected'" class="flex size-6 items-center justify-center rounded-full border border-blue text-blue">
+            <svg class="size-3.5" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M7 2.5v9M2.5 7h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+            </svg>
+        </span>
+        <ShiftChip
+            v-else-if="state === 'filled'"
+            :view="view"
+            :compact="surface === 'grid' && view === 'month'"
+            :fluid="surface === 'grid' && view === 'week'"
+            :time="time"
+            :hours="hours"
+            :tone="tone"
+            :class="surface === 'grid' && selected ? 'ring-2 ring-blue' : ''"
+        />
     </button>
 </template>

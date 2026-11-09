@@ -27,8 +27,8 @@ const emit = defineEmits<{
             <span class="rounded-md bg-white/15 px-2 py-0.5">{{ cells }} ячеек</span>
             <span class="text-white/70">{{ employees }} сотрудника(-ов) · {{ days }} дн.</span>
         </p>
-        <div class="ml-auto flex flex-wrap items-center gap-1">
-            <button type="button" data-selection-apply class="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 hover:bg-white/10" @click="emit('apply', $event)">
+        <div class="flex w-full flex-wrap items-center gap-1 md:ml-auto md:w-auto">
+            <button type="button" data-selection-apply class="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 py-1 whitespace-nowrap hover:bg-white/10 md:min-h-0" @click="emit('apply', $event)">
                 <svg class="size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4" />
                     <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4" />
@@ -37,20 +37,20 @@ const emit = defineEmits<{
                 </svg>
                 Применить шаблон
             </button>
-            <button type="button" class="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 hover:bg-white/10" @click="emit('edit')">
+            <button type="button" class="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 py-1 whitespace-nowrap hover:bg-white/10 md:min-h-0" @click="emit('edit')">
                 <svg class="size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <path d="M9.5 3.5 12.5 6.5 5 14H2v-3L9.5 3.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
                 </svg>
                 Изменить
             </button>
-            <button type="button" class="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 hover:bg-white/10" @click="emit('clear')">
+            <button type="button" class="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 py-1 whitespace-nowrap hover:bg-white/10 md:min-h-0" @click="emit('clear')">
                 <svg class="size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <path d="M3 8a5 5 0 1 0 1.2-3.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
                     <path d="M3 3.5V6h2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 Очистить
             </button>
-            <button type="button" class="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 hover:bg-white/10" @click="emit('remove')">
+            <button type="button" class="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 py-1 whitespace-nowrap hover:bg-white/10 md:min-h-0" @click="emit('remove')">
                 <svg class="size-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <path d="M4 4l8 8M12 4 4 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
                 </svg>

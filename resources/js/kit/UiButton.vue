@@ -29,9 +29,9 @@ const styles: Record<Tone, Record<Variant, string>> = {
         quinary: 'bg-white text-ink shadow-sm hover:bg-zinc-50 active:bg-zinc-50 data-[selected=true]:bg-zinc-200',
     },
     blue: {
-        primary: 'bg-blue text-white hover:bg-[#3148e6] active:bg-[#3148e6] data-[selected=true]:bg-[#2436c4]',
-        secondary: 'bg-blue-soft text-blue hover:bg-[#d9e2ff] active:bg-[#d9e2ff] data-[selected=true]:bg-[#c5d2ff]',
-        tertiary: 'border border-blue/30 bg-white text-blue hover:bg-blue-soft active:bg-blue-soft data-[selected=true]:bg-[#d9e2ff]',
+        primary: 'bg-blue text-white hover:bg-[#516bd4] active:bg-[#516bd4] data-[selected=true]:bg-[#4059c4]',
+        secondary: 'bg-blue-soft text-blue hover:bg-[#dde3f8] active:bg-[#dde3f8] data-[selected=true]:bg-[#d1d9f6]',
+        tertiary: 'border border-blue/30 bg-white text-blue hover:bg-blue-soft active:bg-blue-soft data-[selected=true]:bg-[#dde3f8]',
         quaternary: 'bg-transparent text-blue hover:bg-blue-soft active:bg-blue-soft data-[selected=true]:bg-[#d9e2ff]',
         quinary: 'bg-white text-blue shadow-sm hover:bg-blue-soft active:bg-blue-soft data-[selected=true]:bg-[#d9e2ff]',
     },

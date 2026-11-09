@@ -3,7 +3,7 @@ import DayCell from '@/kit/DayCell.vue';
 import EmployeeCell from '@/kit/EmployeeCell.vue';
 import { shiftHoursLabel, shiftTimeLabel, shiftTone } from '@/schedule/shiftPresentation';
 import TemplateMenu from '@/schedule/TemplateMenu.vue';
-import { dayLabel, formatIsoDate, isSameDay, weekdayShort } from '@/schedule/week';
+import { dayLabel, formatIsoDate } from '@/schedule/week';
 import { useScheduleStore } from '@/stores/schedule';
 import type { Employee, ShiftTone } from '@/types/schedule';
 import { storeToRefs } from 'pinia';
@@ -21,7 +21,9 @@ type OpenMenu = {
 
 const store = useScheduleStore();
 const { days, visibleEmployees, employees, templates, query, shiftsLoading, selecting, view } = storeToRefs(store);
-const today = new Date();
+const mobileQuery = window.matchMedia('(max-width: 767px)');
+const belowWideQuery = window.matchMedia('(max-width: 1099px)');
+const band = ref<'mobile' | 'tablet' | 'desktop'>(readBand());
 const menu = ref<OpenMenu | null>(null);
 const saving = ref(false);
 const menuPanel = useTemplateRef('menuPanel');
@@ -40,10 +42,38 @@ let movingShiftId: number | null = null;
 const moveSource = ref<CellPoint | null>(null);
 const moveTarget = ref<CellPoint | null>(null);
 
-const gridStyle = computed(() => ({
-    gridTemplateColumns:
-        view.value === 'month' ? `200px repeat(${days.value.length}, minmax(44px, 1fr))` : '240px repeat(7, minmax(0, 1fr))',
-}));
+const gridStyle = computed(() => {
+    const month = view.value === 'month';
+    const employee = month
+        ? { mobile: '132px', tablet: '180px', desktop: '200px' }[band.value]
+        : { mobile: '132px', tablet: '188px', desktop: '240px' }[band.value];
+    const day = month
+        ? { mobile: 'minmax(36px, 1fr)', tablet: 'minmax(44px, 1fr)', desktop: 'minmax(44px, 1fr)' }[band.value]
+        : { mobile: 'minmax(88px, 1fr)', tablet: 'minmax(96px, 1fr)', desktop: 'minmax(0, 1fr)' }[band.value];
+    const columns = month ? days.value.length : 7;
+    const minWidth = month ? undefined : { mobile: '748px', tablet: '860px', desktop: '920px' }[band.value];
+
+    return {
+        gridTemplateColumns: `${employee} repeat(${columns}, ${day})`,
+        minWidth,
+    };
+});
+
+function readBand(): 'mobile' | 'tablet' | 'desktop' {
+    if (mobileQuery.matches) {
+        return 'mobile';
+    }
+
+    if (belowWideQuery.matches) {
+        return 'tablet';
+    }
+
+    return 'desktop';
+}
+
+function syncBand(): void {
+    band.value = readBand();
+}
 
 const activeTemplateId = computed(() => {
     const current = menu.value;
@@ -101,12 +131,21 @@ function isCellMenuOpen(employee: Employee, day: Date): boolean {
     return current?.mode === 'cell' && current.employeeId === employee.id && current.date === formatIsoDate(day);
 }
 
+function weekdayHeader(day: Date): string {
+    const label = day.toLocaleDateString('ru-RU', { weekday: 'short' }).replace('.', '').toLocaleLowerCase('ru-RU');
+
+    return `${label} ${day.getDate()}`;
+}
+
+function rowTone(index: number): string {
+    return index % 2 === 1 ? 'bg-row' : 'bg-white';
+}
+
 function coverageLabel(day: Date): string {
     const date = dayLabel(day);
+    const count = store.coverageCount(formatIsoDate(day));
 
-    const state = store.isDateCovered(formatIsoDate(day)) ? 'есть смены' : 'смен нет';
-
-    return `Покрытие, ${date}: ${state}`;
+    return `Покрытие, ${date}: ${count}`;
 }
 
 function isDayMenuOpen(day: Date): boolean {
@@ -510,6 +549,9 @@ watch(selecting, (active) => {
 });
 
 onMounted(() => {
+    syncBand();
+    mobileQuery.addEventListener('change', syncBand);
+    belowWideQuery.addEventListener('change', syncBand);
     document.addEventListener('pointerdown', onPointerDown);
     window.addEventListener('keydown', onKeydown);
     window.addEventListener('resize', repositionMenu);
@@ -517,6 +559,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+    mobileQuery.removeEventListener('change', syncBand);
+    belowWideQuery.removeEventListener('change', syncBand);
     document.removeEventListener('pointerdown', onPointerDown);
     window.removeEventListener('keydown', onKeydown);
     window.removeEventListener('resize', repositionMenu);
@@ -526,30 +570,28 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div ref="scroller" class="overflow-x-auto" :class="[shiftsLoading ? 'opacity-60' : 'opacity-100', moveSource ? 'cursor-grabbing' : '']" :aria-busy="shiftsLoading">
+    <div ref="scroller" class="overflow-x-auto overscroll-x-contain pb-1" :class="[shiftsLoading ? 'opacity-60' : 'opacity-100', moveSource ? 'cursor-grabbing' : '']" :aria-busy="shiftsLoading">
         <div
-            class="grid border-t border-l border-line select-none"
-            :class="view === 'month' ? 'min-w-max' : 'min-w-[920px]'"
+            class="grid select-none"
+            :class="view === 'month' ? 'min-w-max' : ''"
             :style="gridStyle"
             role="grid"
             :aria-label="view === 'month' ? 'График на месяц' : 'График на неделю'"
         >
             <div role="row" class="contents">
-                <div role="columnheader" class="sticky left-0 z-10 flex items-end border-r border-b border-line bg-white px-4 pb-3 text-xs text-muted">Сотрудник</div>
-                <div v-for="day in days" :key="formatIsoDate(day)" role="columnheader" class="flex flex-col items-center justify-end gap-1 border-r border-b border-line px-0.5 py-2">
-                    <span class="text-[11px] text-muted">{{ weekdayShort(day).toLocaleLowerCase('ru-RU') }}</span>
+                <div role="columnheader" class="sticky left-0 z-10 flex items-end border-b border-line bg-white px-2 pb-2 text-xs text-muted md:px-4 md:pb-3 md:text-sm max-wide:shadow-[4px_0_8px_-6px_rgba(28,29,34,0.35)]">Сотрудник</div>
+                <div v-for="day in days" :key="formatIsoDate(day)" role="columnheader" class="flex items-end justify-center border-b border-line px-0.5 pb-2 md:px-1 md:pb-3">
                     <button
                         type="button"
-                        class="font-semibold"
-                        :class="[view === 'month' ? 'text-xs' : 'text-sm', isSameDay(day, today) ? 'text-blue' : 'text-ink']"
+                        class="whitespace-nowrap text-muted"
+                        :class="view === 'month' ? 'text-[11px]' : 'text-[11px] md:text-sm'"
                         :aria-label="`Назначить смену на ${dayLabel(day)}`"
                         aria-haspopup="menu"
                         :aria-expanded="isDayMenuOpen(day)"
                         @click="openDayMenu(day, $event)"
                     >
-                        {{ day.getDate() }}
+                        {{ weekdayHeader(day) }}
                     </button>
-                    <span class="size-1.5 rounded-full" :class="store.isDateCovered(formatIsoDate(day)) ? 'bg-blue' : 'bg-cover-empty'" role="img" :aria-label="coverageLabel(day)" />
                 </div>
             </div>
 
@@ -557,8 +599,8 @@ onUnmounted(() => {
                 {{ query.trim() ? 'Нет сотрудников с таким ФИО.' : 'В графике пока нет сотрудников.' }}
             </p>
 
-            <div v-for="employee in visibleEmployees" :key="employee.id" role="row" class="contents">
-                <div role="rowheader" class="sticky left-0 z-10 border-r border-b border-line bg-white px-4 py-2">
+            <div v-for="(employee, rowIndex) in visibleEmployees" :key="employee.id" role="row" class="contents">
+                <div role="rowheader" class="sticky left-0 z-10 flex min-w-0 items-center px-2 md:px-4 max-wide:shadow-[4px_0_8px_-6px_rgba(28,29,34,0.35)]" :class="rowTone(rowIndex)">
                     <EmployeeCell
                         :name="employee.name"
                         :position="employee.position"
@@ -570,8 +612,7 @@ onUnmounted(() => {
                     v-for="day in days"
                     :key="formatIsoDate(day)"
                     role="gridcell"
-                    class="border-r border-b border-line"
-                    :class="moveTarget && moveSource && sameCell(moveTarget, cellPoint(employee, day)) && !sameCell(moveSource, moveTarget) ? 'ring-2 ring-blue ring-inset' : ''"
+                    :class="[rowTone(rowIndex), moveTarget && moveSource && sameCell(moveTarget, cellPoint(employee, day)) && !sameCell(moveSource, moveTarget) ? 'ring-2 ring-blue ring-inset' : '']"
                     :aria-selected="store.isSelected(employee.id, formatIsoDate(day))"
                     @dragenter.prevent
                     @dragover="onShiftDragOver(employee, day, $event)"
@@ -605,9 +646,15 @@ onUnmounted(() => {
             </div>
 
             <div role="row" class="contents">
-                <div class="sticky left-0 z-10 border-r border-b border-line bg-white px-4 py-3 text-xs text-muted">Покрытие</div>
-                <div v-for="day in days" :key="`cover-${formatIsoDate(day)}`" class="flex items-center justify-center border-r border-b border-line py-3">
-                    <span class="size-2 rounded-full" :class="store.isDateCovered(formatIsoDate(day)) ? 'bg-blue' : 'bg-cover-empty'" role="img" :aria-label="coverageLabel(day)" />
+                <div class="sticky left-0 z-10 flex h-10 items-center bg-white px-2 text-xs text-muted md:h-12 md:px-4 md:text-sm max-wide:shadow-[4px_0_8px_-6px_rgba(28,29,34,0.35)]">Покрытие</div>
+                <div
+                    v-for="day in days"
+                    :key="`cover-${formatIsoDate(day)}`"
+                    class="flex h-10 items-center justify-center text-xs font-medium md:h-12"
+                    :class="store.coverageCount(formatIsoDate(day)) > 0 ? 'bg-blue-soft text-blue' : 'bg-cover-empty text-cover-text'"
+                    :aria-label="coverageLabel(day)"
+                >
+                    {{ store.coverageCount(formatIsoDate(day)) }}
                 </div>
             </div>
         </div>

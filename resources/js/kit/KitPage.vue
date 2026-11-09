@@ -107,11 +107,11 @@ const tones = ['morning', 'day', 'evening', 'solid'] as const;
             <div class="mt-4 grid gap-6 sm:grid-cols-2">
                 <div>
                     <p class="mb-3 text-sm font-medium">Серые</p>
-                    <UiSearch v-model="grayQuery" theme="gray" />
+                    <UiSearch v-model="grayQuery" class="max-w-xs" theme="gray" />
                 </div>
                 <div>
                     <p class="mb-3 text-sm font-medium">Белый</p>
-                    <UiSearch v-model="whiteQuery" theme="white" />
+                    <UiSearch v-model="whiteQuery" class="max-w-xs" theme="white" />
                 </div>
             </div>
         </section>

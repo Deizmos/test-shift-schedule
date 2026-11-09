@@ -18,9 +18,9 @@ const emit = defineEmits<{
 const root = useTemplateRef('root');
 
 const bars: Record<ShiftTone, string> = {
-    morning: 'bg-shift-morning',
-    day: 'bg-shift-day',
-    evening: 'bg-shift-evening',
+    morning: 'bg-shift-morning-edge',
+    day: 'bg-shift-day-edge',
+    evening: 'bg-shift-evening-edge',
     solid: 'bg-shift-solid',
 };
 
@@ -30,8 +30,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <div ref="root" class="w-60 rounded-2xl bg-white p-2 shadow-lg ring-1 ring-line" role="menu" :aria-label="title" :aria-busy="saving">
-        <p class="px-2 pt-1 text-sm font-semibold text-ink">{{ title }}</p>
+    <div ref="root" class="w-[min(15rem,calc(100vw-1rem))] rounded-2xl bg-white p-2 shadow-lg ring-1 ring-line" role="menu" :aria-label="title" :aria-busy="saving">
+        <p class="truncate px-2 pt-1 text-sm font-semibold text-ink">{{ title }}</p>
         <p class="px-2 pb-2 text-xs text-muted">{{ subtitle }}</p>
         <p v-if="templates.length === 0" class="px-2 py-2 text-sm text-muted">Шаблонов нет.</p>
         <div v-else class="flex flex-col gap-1">

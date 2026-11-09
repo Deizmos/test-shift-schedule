@@ -15,10 +15,10 @@ const query = defineModel<string>({ default: '' });
 
 <template>
     <label
-        class="flex h-10 w-full max-w-xs items-center gap-2 rounded-xl px-3 text-sm text-ink transition"
+        class="flex h-12 w-full items-center gap-2 rounded-2xl px-4 text-sm text-ink transition"
         :class="
             theme === 'gray'
-                ? 'bg-zinc-100 hover:bg-zinc-200/80 focus-within:bg-zinc-100 focus-within:ring-2 focus-within:ring-blue/30'
+                ? 'bg-field hover:bg-[#e8e9ef] focus-within:bg-field focus-within:ring-2 focus-within:ring-blue/30'
                 : 'border border-line bg-white hover:border-zinc-300 focus-within:border-blue focus-within:ring-2 focus-within:ring-blue/20'
         "
     >
