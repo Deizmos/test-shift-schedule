@@ -3,6 +3,7 @@
 Тестовое задание fullstack-разработчика: интерфейс создания рабочего графика по макету в Figma.
 
 - Макет: [Тестовое задание разработчик](https://www.figma.com/design/QVdDSEGTL1bWg7UmuPpoPe)
+- Репозиторий: [github.com/Deizmos/test-shift-schedule](https://github.com/Deizmos/test-shift-schedule)
 - Стек: Vue 3, TypeScript, PHP / Laravel 13
 - План работ: [PLAN.md](PLAN.md)
 
